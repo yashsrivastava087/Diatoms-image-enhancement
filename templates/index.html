@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImageEnhancer - Diatom Analysis</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #18bc9c;
+            --accent-color: #3498db;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        .main-card {
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            background: white;
+        }
+
+        .main-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .upload-header {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            padding: 2rem;
+        }
+
+        .custom-file-input {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .custom-file-label {
+            background: var(--secondary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .custom-file-label:hover {
+            background: #148f77;
+            transform: scale(1.05);
+        }
+
+        .process-btn {
+            background: var(--accent-color);
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .result-section {
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 2rem;
+        }
+
+        .image-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .image-preview {
+            max-height: 400px;
+            object-fit: contain;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .brand-title {
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            letter-spacing: 2px;
+            color: var(--primary-color);
+        }
+
+
+    .process-btn {
+        background: var(--accent-color);
+        padding: 1rem 3rem;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .process-btn:hover {
+        background: #2a7aab; 
+        transform: scale(1.05);
+    }
+
+    #loadingSpinner {
+        display: none; 
+    }
+    </style>
+</head>
+<body class="py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="brand-title display-4 fw-bold mb-3">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjZmZmIj48cGF0aCBkPSJNMTIgMkM2LjQ4NiAyIDIgNi40ODYgMiAxMnM0LjQ4NiAxMCAxMCAxMCAxMC00LjQ4NiAxMC0xMFMxNy41MTQgMiAxMiAyem0wIDE4Yy00LjQxMSAwLTgtMy41ODktOC04IDAtNC40MTEgMy41ODktOCA4LTggNC40MTEgMCA4IDMuNTg5IDggOCAwIDQuNDExLTMuNTg5IDgtOCA4em0yLTEyYzAgLjU1Mi0uNDQ4IDEtMSAxcy0xLS40NDgtMS0xVjcuNWMwLS41NTIuNDQ4LTEgMS0xczEgLjQ0OCAxIDF2My41em0wIDQuNXYzLjVjMCAuNTUyLS40NDggMS0xIDFzLTEtLjQ0OC0xLTF2LTMuNWMwLS41NTIuNDQ4LTEgMS0xczEgLjQ0OCAxIDF6Ii8+PC9zdmc+" 
+                     alt="Logo"
+                     style="width: 40px; height: 40px; margin-right: 10px;">
+                     ImageEnhancer
+            </h1>
+            <p class="text-muted">Advanced Diatom Image Analysis Platform</p>
+        </div>
+
+        <div class="main-card mb-5">
+            <div class="upload-header text-center">
+                <h2 class="mb-3">Upload Diatom Image</h2>
+                <p class="mb-0">Supported formats: JPG, PNG, TIFF</p>
+            </div>
+            
+            <div class="card-body p-5">
+                <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+                    <div class="text-center">
+                        <div class="mb-4">
+                            <input type="file" name="file" id="file" class="custom-file-input" required>
+                            <label for="file" class="custom-file-label">
+                                <i class="bi bi-cloud-arrow-up-fill me-2"></i>
+                                Choose Image File
+                            </label>
+                            <div id="fileName" class="mt-2 text-muted small"></div>
+                        </div>
+
+                        <button type="submit" class="btn process-btn text-white rounded-pill">
+                            Enhance Image
+                            <span class="spinner-border spinner-border-sm ms-2" id="loadingSpinner"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Loading State -->
+        <div id="loadingState" class="text-center mt-5" style="display: none;">
+            <div class="spinner-border text-primary loading-spinner" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="text-muted mt-3">Processing image... This may take a few seconds</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('file').addEventListener('change', function(e) {
+            const fileName = document.getElementById('fileName');
+            fileName.textContent = e.target.files[0].name;
+        });
+
+        // Form submission handler
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        // Prevent double submission
+        const btn = this.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        
+        // Show loading states
+        document.getElementById('loadingSpinner').style.display = 'inline-block';
+        document.getElementById('loadingState').style.display = 'block';
+        
+       
+        btn.style.opacity = '0.8';
+        btn.style.cursor = 'not-allowed';
+    });
+        setTimeout(() => {
+            document.getElementById('resultSection').style.display = 'flex';
+            document.getElementById('loadingState').style.display = 'none';
+        }, 2000);
+    </script>
+</body>
+</html>

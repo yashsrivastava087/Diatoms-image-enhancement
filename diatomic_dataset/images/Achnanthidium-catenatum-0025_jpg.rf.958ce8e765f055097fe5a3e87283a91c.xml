@@ -1,0 +1,27 @@
+<annotation>
+	<folder></folder>
+	<filename>Achnanthidium-catenatum-0025_jpg.rf.958ce8e765f055097fe5a3e87283a91c.jpg</filename>
+	<path>Achnanthidium-catenatum-0025_jpg.rf.958ce8e765f055097fe5a3e87283a91c.jpg</path>
+	<source>
+		<database>roboflow.ai</database>
+	</source>
+	<size>
+		<width>175</width>
+		<height>250</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Achnanthidium</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<occluded>0</occluded>
+		<bndbox>
+			<xmin>6</xmin>
+			<xmax>55</xmax>
+			<ymin>2</ymin>
+			<ymax>245</ymax>
+		</bndbox>
+	</object>
+</annotation>
