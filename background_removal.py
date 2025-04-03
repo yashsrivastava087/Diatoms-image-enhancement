@@ -1,19 +1,28 @@
 import cv2
+import numpy as np
 
 img = cv2.imread('diatomic_dataset/train/image3.png')
 
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-_, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+l, a, b = cv2.split(lab)
 
-kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
-mask = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+l = clahe.apply(l)
 
-result = cv2.bitwise_and(img, img, mask=mask)
+enhanced_lab = cv2.merge((l, a, b))
+enhanced_img = cv2.cvtColor(enhanced_lab, cv2.COLOR_LAB2BGR)
 
-enhanced_img = cv2.convertScaleAbs(result, alpha=1.5,beta=0)
+gaussian = cv2.GaussianBlur(enhanced_img, (0, 0), 3)
+sharpened = cv2.addWeighted(enhanced_img, 1.5, gaussian, -0.5, 0)
 
+# Apply Gamma Correction for brightness balance
+gamma = 1.2  
+gamma_correction = np.array([((i / 255.0) ** gamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
+final_img = cv2.LUT(sharpened, gamma_correction)
+
+# Show images
 cv2.imshow('Original', img)
-cv2.imshow('Background Removed', result)  
-cv2.imshow('Enhanced', enhanced_img)
+cv2.imshow('Enhanced', final_img)
+
 cv2.waitKey(0)
 cv2.destroyAllWindows()
