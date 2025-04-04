@@ -35,5 +35,5 @@ final_img = cv2.LUT(sharpened, gamma_correction)
 cv2.imshow('Original', img)
 cv2.imshow('Enhanced (IABR Method)', final_img)
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+cv2.waitKey(0);
+cv2.destroyAllWindows();
