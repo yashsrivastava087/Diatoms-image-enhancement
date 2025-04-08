@@ -12,10 +12,8 @@ l, a, b = cv2.split(lab)
 l_min, l_max = np.min(l), np.max(l)
 l = ((l - l_min) / (l_max - l_min) * 255).astype(np.uint8)
 
-# Apply Gaussian Blur for smoothing
 l_blurred = cv2.GaussianBlur(l, (5,5), 0)
 
-# Adjust brightness using weighted addition
 enhanced_l = cv2.addWeighted(l, 1.5, l_blurred, -0.5, 0)
 
 # Merge back the enhanced L-channel with A and B
